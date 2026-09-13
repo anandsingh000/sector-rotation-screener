@@ -1,8 +1,1 @@
-fastapi
-uvicorn[standard]
-pandas
-numpy
-pydantic-settings
-python-dotenv
-pytest
-httpx
+streamlit>=1.38 yfinance>=0.2.40 pandas>=2.1 numpy>=1.26 plotly>=5.20
