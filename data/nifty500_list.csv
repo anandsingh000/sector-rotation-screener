@@ -1,0 +1,111 @@
+symbol,name,sector
+RELIANCE,Reliance Industries,Oil Gas & Consumable Fuels
+ONGC,Oil & Natural Gas Corporation,Oil Gas & Consumable Fuels
+IOC,Indian Oil Corporation,Oil Gas & Consumable Fuels
+BPCL,Bharat Petroleum Corporation,Oil Gas & Consumable Fuels
+GAIL,GAIL India,Oil Gas & Consumable Fuels
+TCS,Tata Consultancy Services,Information Technology
+INFY,Infosys,Information Technology
+HCLTECH,HCL Technologies,Information Technology
+WIPRO,Wipro,Information Technology
+TECHM,Tech Mahindra,Information Technology
+LTIM,LTIMindtree,Information Technology
+PERSISTENT,Persistent Systems,Information Technology
+HDFCBANK,HDFC Bank,Financial Services
+ICICIBANK,ICICI Bank,Financial Services
+SBIN,State Bank of India,Financial Services
+KOTAKBANK,Kotak Mahindra Bank,Financial Services
+AXISBANK,Axis Bank,Financial Services
+INDUSINDBK,IndusInd Bank,Financial Services
+BAJFINANCE,Bajaj Finance,Financial Services
+BAJAJFINSV,Bajaj Finserv,Financial Services
+HDFCLIFE,HDFC Life Insurance,Financial Services
+SBILIFE,SBI Life Insurance,Financial Services
+ICICIGI,ICICI Lombard General Insurance,Financial Services
+PFC,Power Finance Corporation,Financial Services
+RECLTD,REC Limited,Financial Services
+HINDUNILVR,Hindustan Unilever,Fast Moving Consumer Goods
+ITC,ITC Limited,Fast Moving Consumer Goods
+NESTLEIND,Nestle India,Fast Moving Consumer Goods
+BRITANNIA,Britannia Industries,Fast Moving Consumer Goods
+DABUR,Dabur India,Fast Moving Consumer Goods
+MARICO,Marico,Fast Moving Consumer Goods
+TATACONSUM,Tata Consumer Products,Fast Moving Consumer Goods
+COLPAL,Colgate-Palmolive India,Fast Moving Consumer Goods
+GODREJCP,Godrej Consumer Products,Fast Moving Consumer Goods
+MARUTI,Maruti Suzuki India,Automobile and Auto Components
+TATAMOTORS,Tata Motors,Automobile and Auto Components
+M&M,Mahindra & Mahindra,Automobile and Auto Components
+BAJAJ-AUTO,Bajaj Auto,Automobile and Auto Components
+EICHERMOT,Eicher Motors,Automobile and Auto Components
+HEROMOTOCO,Hero MotoCorp,Automobile and Auto Components
+TVSMOTOR,TVS Motor Company,Automobile and Auto Components
+BOSCHLTD,Bosch,Automobile and Auto Components
+MOTHERSON,Samvardhana Motherson International,Automobile and Auto Components
+SUNPHARMA,Sun Pharmaceutical Industries,Healthcare
+DRREDDY,Dr. Reddys Laboratories,Healthcare
+CIPLA,Cipla,Healthcare
+DIVISLAB,Divis Laboratories,Healthcare
+APOLLOHOSP,Apollo Hospitals Enterprise,Healthcare
+LUPIN,Lupin,Healthcare
+AUROPHARMA,Aurobindo Pharma,Healthcare
+BIOCON,Biocon,Healthcare
+MAXHEALTH,Max Healthcare Institute,Healthcare
+TATASTEEL,Tata Steel,Metals & Mining
+JSWSTEEL,JSW Steel,Metals & Mining
+HINDALCO,Hindalco Industries,Metals & Mining
+VEDL,Vedanta,Metals & Mining
+COALINDIA,Coal India,Metals & Mining
+JINDALSTEL,Jindal Steel & Power,Metals & Mining
+SAIL,Steel Authority of India,Metals & Mining
+NMDC,NMDC,Metals & Mining
+NTPC,NTPC,Power
+POWERGRID,Power Grid Corporation of India,Power
+TATAPOWER,Tata Power Company,Power
+ADANIPOWER,Adani Power,Power
+NHPC,NHPC,Power
+LT,Larsen & Toubro,Capital Goods
+SIEMENS,Siemens,Capital Goods
+ABB,ABB India,Capital Goods
+BHEL,Bharat Heavy Electricals,Capital Goods
+CUMMINSIND,Cummins India,Capital Goods
+HAL,Hindustan Aeronautics,Capital Goods
+BEL,Bharat Electronics,Capital Goods
+ULTRACEMCO,UltraTech Cement,Construction Materials
+SHREECEM,Shree Cement,Construction Materials
+AMBUJACEM,Ambuja Cements,Construction Materials
+ACC,ACC Limited,Construction Materials
+GRASIM,Grasim Industries,Construction Materials
+DLF,DLF,Realty
+GODREJPROP,Godrej Properties,Realty
+OBEROIRLTY,Oberoi Realty,Realty
+PRESTIGE,Prestige Estates Projects,Realty
+BHARTIARTL,Bharti Airtel,Telecommunication
+IDEA,Vodafone Idea,Telecommunication
+INDUSTOWER,Indus Towers,Telecommunication
+ASIANPAINT,Asian Paints,Consumer Durables
+TITAN,Titan Company,Consumer Durables
+HAVELLS,Havells India,Consumer Durables
+VOLTAS,Voltas,Consumer Durables
+DIXON,Dixon Technologies,Consumer Durables
+CROMPTON,Crompton Greaves Consumer Electricals,Consumer Durables
+TRENT,Trent,Consumer Services
+ZOMATO,Eternal (Zomato),Consumer Services
+NAUKRI,Info Edge India,Consumer Services
+IRCTC,Indian Railway Catering & Tourism Corp,Consumer Services
+JUBLFOOD,Jubilant FoodWorks,Consumer Services
+UPL,UPL,Chemicals
+PIDILITIND,Pidilite Industries,Chemicals
+SRF,SRF,Chemicals
+AARTIIND,Aarti Industries,Chemicals
+DEEPAKNTR,Deepak Nitrite,Chemicals
+PVRINOX,PVR INOX,Media Entertainment & Publication
+ZEEL,Zee Entertainment Enterprises,Media Entertainment & Publication
+SUNTV,Sun TV Network,Media Entertainment & Publication
+ADANIENT,Adani Enterprises,Diversified
+ADANIPORTS,Adani Ports and Special Economic Zone,Services
+CONCOR,Container Corporation of India,Services
+INDIGO,InterGlobe Aviation,Services
+TRIDENT,Trident,Textiles
+PAGEIND,Page Industries,Textiles
+RAYMOND,Raymond,Textiles
