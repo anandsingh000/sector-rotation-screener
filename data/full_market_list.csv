@@ -9,7 +9,7 @@ INFY,Infosys,Information Technology,NSE,
 HCLTECH,HCL Technologies,Information Technology,NSE,
 WIPRO,Wipro,Information Technology,NSE,
 TECHM,Tech Mahindra,Information Technology,NSE,
-LTIM,LTIMindtree,Information Technology,NSE,
+LTM,LTM Limited (ex-LTIMindtree),Information Technology,NSE,
 PERSISTENT,Persistent Systems,Information Technology,NSE,
 HDFCBANK,HDFC Bank,Financial Services,NSE,
 ICICIBANK,ICICI Bank,Financial Services,NSE,
@@ -34,7 +34,8 @@ TATACONSUM,Tata Consumer Products,Fast Moving Consumer Goods,NSE,
 COLPAL,Colgate-Palmolive India,Fast Moving Consumer Goods,NSE,
 GODREJCP,Godrej Consumer Products,Fast Moving Consumer Goods,NSE,
 MARUTI,Maruti Suzuki India,Automobile and Auto Components,NSE,
-TATAMOTORS,Tata Motors,Automobile and Auto Components,NSE,
+TMPV,Tata Motors Passenger Vehicles,Automobile and Auto Components,NSE,
+TMCV,Tata Motors (Commercial Vehicles),Automobile and Auto Components,NSE,
 M&M,Mahindra & Mahindra,Automobile and Auto Components,NSE,
 BAJAJ-AUTO,Bajaj Auto,Automobile and Auto Components,NSE,
 EICHERMOT,Eicher Motors,Automobile and Auto Components,NSE,
@@ -90,7 +91,7 @@ VOLTAS,Voltas,Consumer Durables,NSE,
 DIXON,Dixon Technologies,Consumer Durables,NSE,
 CROMPTON,Crompton Greaves Consumer Electricals,Consumer Durables,NSE,
 TRENT,Trent,Consumer Services,NSE,
-ZOMATO,Eternal (Zomato),Consumer Services,NSE,
+ETERNAL,Eternal (ex-Zomato),Consumer Services,NSE,
 NAUKRI,Info Edge India,Consumer Services,NSE,
 IRCTC,Indian Railway Catering & Tourism Corp,Consumer Services,NSE,
 JUBLFOOD,Jubilant FoodWorks,Consumer Services,NSE,
@@ -120,9 +121,12 @@ RAYMOND,Raymond,Textiles,NSE,
 500510,Larsen & Toubro (BSE),Capital Goods,BSE,500510.BO
 532500,Maruti Suzuki India (BSE),Automobile and Auto Components,BSE,532500.BO
 524715,Sun Pharmaceutical Industries (BSE),Healthcare,BSE,524715.BO
-500570,Tata Motors (BSE),Automobile and Auto Components,BSE,500570.BO
+500570,Tata Motors Passenger Vehicles (BSE),Automobile and Auto Components,BSE,500570.BO
+544569,Tata Motors Commercial Vehicles (BSE),Automobile and Auto Components,BSE,544569.BO
 507685,Wipro (BSE),Information Technology,BSE,507685.BO
 500820,Asian Paints (BSE),Consumer Durables,BSE,500820.BO
 500247,Kotak Mahindra Bank (BSE),Financial Services,BSE,500247.BO
 532215,Axis Bank (BSE),Financial Services,BSE,532215.BO
 532281,HCL Technologies (BSE),Information Technology,BSE,532281.BO
+543320,Eternal ex-Zomato (BSE),Consumer Services,BSE,543320.BO
+540005,LTM Limited ex-LTIMindtree (BSE),Information Technology,BSE,540005.BO

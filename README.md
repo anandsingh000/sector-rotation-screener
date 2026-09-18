@@ -67,6 +67,21 @@ universe:
 3. Replace `data/nifty500_list.csv`, or point the sidebar's "Universe
    CSV path" at your new file.
 
+**Keep tickers current.** Indian symbols change more often than you'd
+expect (renames, demergers), and a stale symbol shows up in the console
+as `possibly delisted; no price data found`. The app skips those rows
+safely, but you lose that stock from the scan. Ones already fixed in the
+shipped lists:
+
+| Old symbol | Now | What happened |
+|---|---|---|
+| `ZOMATO` | `ETERNAL` (BSE 543320) | Zomato Ltd renamed Eternal Ltd |
+| `LTIM` | `LTM` (BSE 540005) | LTIMindtree rebranded to LTM Limited (Feb 2026) |
+| `TATAMOTORS` | `TMPV` (BSE 500570) + `TMCV` (BSE 544569) | Demerged into Passenger Vehicles and Commercial Vehicles (Oct 2025) |
+
+If you see that warning for some other symbol, look up its current NSE
+ticker and update your CSV.
+
 ## 4. Put it on GitHub
 
 ```bash

@@ -9,7 +9,7 @@ INFY,Infosys,Information Technology
 HCLTECH,HCL Technologies,Information Technology
 WIPRO,Wipro,Information Technology
 TECHM,Tech Mahindra,Information Technology
-LTIM,LTIMindtree,Information Technology
+LTM,LTM Limited (ex-LTIMindtree),Information Technology
 PERSISTENT,Persistent Systems,Information Technology
 HDFCBANK,HDFC Bank,Financial Services
 ICICIBANK,ICICI Bank,Financial Services
@@ -34,7 +34,8 @@ TATACONSUM,Tata Consumer Products,Fast Moving Consumer Goods
 COLPAL,Colgate-Palmolive India,Fast Moving Consumer Goods
 GODREJCP,Godrej Consumer Products,Fast Moving Consumer Goods
 MARUTI,Maruti Suzuki India,Automobile and Auto Components
-TATAMOTORS,Tata Motors,Automobile and Auto Components
+TMPV,Tata Motors Passenger Vehicles,Automobile and Auto Components
+TMCV,Tata Motors (Commercial Vehicles),Automobile and Auto Components
 M&M,Mahindra & Mahindra,Automobile and Auto Components
 BAJAJ-AUTO,Bajaj Auto,Automobile and Auto Components
 EICHERMOT,Eicher Motors,Automobile and Auto Components
@@ -90,7 +91,7 @@ VOLTAS,Voltas,Consumer Durables
 DIXON,Dixon Technologies,Consumer Durables
 CROMPTON,Crompton Greaves Consumer Electricals,Consumer Durables
 TRENT,Trent,Consumer Services
-ZOMATO,Eternal (Zomato),Consumer Services
+ETERNAL,Eternal (ex-Zomato),Consumer Services
 NAUKRI,Info Edge India,Consumer Services
 IRCTC,Indian Railway Catering & Tourism Corp,Consumer Services
 JUBLFOOD,Jubilant FoodWorks,Consumer Services
