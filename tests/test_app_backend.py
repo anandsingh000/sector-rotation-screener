@@ -22,6 +22,7 @@ _APP_PATH = os.path.join(_PROJECT_ROOT, "app.py")
 from screener import data as data_module
 from screener import fundamentals as fundamentals_module
 from screener import scanner as scanner_module
+from screener import ai_agent as ai_agent_module
 
 np.random.seed(7)
 DATES = pd.bdate_range("2018-01-01", periods=2000)
@@ -117,6 +118,15 @@ def fake_fetch_deep_fundamentals(yahoo_symbol):
 data_module.load_market_universe = fake_load_market_universe
 data_module.fetch_ohlcv_bulk = fake_fetch_ohlcv_bulk
 scanner_module.fetch_deep_fundamentals = fake_fetch_deep_fundamentals
+
+
+def fake_generate_market_agent_report(candidates, api_key, model=None):
+    if not api_key:
+        return {"ok": False, "error": "no api key"}
+    return {"ok": True, "text": "Fake Hinglish AI agent summary for testing."}
+
+
+ai_agent_module.generate_market_agent_report = fake_generate_market_agent_report
 
 from streamlit.testing.v1 import AppTest  # noqa: E402
 
@@ -233,7 +243,37 @@ if scan_btn:
     scan_btn2[0].click().run(timeout=120)
     check("scanner -> re-run scan after exchange change", at)
 
-print("\n=== 15. Re-run the whole script fresh once more (idempotency check) ===")
+print("\n=== 15. AI Market Agent -> Scan market now ===")
+agent_scan_btn = [b for b in at.button if b.key == "agent_manual_scan_btn"]
+if agent_scan_btn:
+    agent_scan_btn[0].click().run(timeout=120)
+    check("AI agent -> Scan market now", at)
+    print("    agent_scan_result rows:", len(at.session_state["agent_scan_result"]) if "agent_scan_result" in at.session_state else "N/A")
+else:
+    print("    [SKIP] agent_manual_scan_btn not found")
+
+print("\n=== 16. AI Market Agent -> enter API key + generate report ===")
+key_input = [t for t in at.text_input if t.key == "nvidia_api_key_input"]
+if key_input:
+    key_input[0].set_value("nvapi-fake-test-key").run(timeout=60)
+    check("AI agent -> set API key", at)
+report_btn = [b for b in at.button if b.key == "agent_generate_report_btn"]
+if report_btn:
+    report_btn[0].click().run(timeout=60)
+    check("AI agent -> Generate AI Agent Report", at)
+else:
+    print("    [SKIP] agent_generate_report_btn not found (maybe no candidates this run)")
+
+print("\n=== 17. AI Market Agent -> toggle auto-refresh on/off ===")
+autorefresh_cb = [c for c in at.checkbox if c.key == "agent_autorefresh_on"]
+if autorefresh_cb:
+    autorefresh_cb[0].set_value(True).run(timeout=60)
+    check("AI agent -> enable auto-refresh", at)
+    autorefresh_cb2 = [c for c in at.checkbox if c.key == "agent_autorefresh_on"]
+    autorefresh_cb2[0].set_value(False).run(timeout=60)
+    check("AI agent -> disable auto-refresh", at)
+
+print("\n=== 18. Re-run the whole script fresh once more (idempotency check) ===")
 at.run(timeout=60)
 check("final fresh rerun", at)
 

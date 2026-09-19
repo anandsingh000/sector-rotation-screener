@@ -20,11 +20,23 @@ sector-rotation-screener/
 │   ├── integrity.py             # Section 6: two-source reconciliation + bad-tick repair
 │   ├── indicators.py            # Sections 3.1–3.4: RRG, RS, 200-DMA, breadth
 │   ├── scorer.py                # Section 4: composite Rotation Score
-│   └── pipeline.py               # wires it all together into result tables
-├── data/nifty500_list.csv       # sample universe (symbol, name, sector)
+│   ├── pipeline.py               # wires the core 4 layers into result tables
+│   ├── ta.py                     # RSI/MACD/52-week range for the chart tab
+│   ├── fundamentals.py           # per-stock P/E, ROE, etc. (Yahoo Ticker.info)
+│   ├── narrative.py              # Hinglish technical+fundamental write-up
+│   ├── scanner.py                # Market Scanner: volume/cash-flow/ROCE/valuation
+│   └── ai_agent.py               # NVIDIA NIM integration for the AI Market Agent tab
+├── data/
+│   ├── nifty500_list.csv        # sample NSE universe (symbol, name, sector)
+│   └── full_market_list.csv     # sample NSE+BSE universe for the scanner/agent tabs
+├── tests/test_app_backend.py    # headless regression test (see Section 11)
+├── upload_to_github.bat         # one-click commit+push helper (Windows)
 ├── requirements.txt
 └── .streamlit/config.toml       # theme
 ```
+
+Eight tabs: Stock Rankings, Sector Breadth, RRG Chart, Chart & Drawing,
+Technical + Fundamental, Market Scanner, AI Market Agent, and Methodology.
 
 ## 2. Run it on your computer
 
@@ -194,7 +206,42 @@ slower scan and a higher chance of hitting Yahoo's rate limits).
   sector) — not a DCF or intrinsic-value model. Treat it as a rough first
   filter, not a valuation call.
 
-## 8. Data-integrity notes (Section 6 of the methodology)
+## 8. AI Market Agent (NVIDIA NIM)
+
+A tab that scans the whole loaded universe and shortlists stocks with a
+**volume surge** and/or **rising operating cash flow** — that shortlist
+is built entirely by deterministic code (same `screener/scanner.py`
+signals as the Market Scanner tab), never by the AI. Optionally, if you
+give it an NVIDIA API key, it sends that shortlist to an NVIDIA NIM model
+(`https://integrate.api.nvidia.com/v1`, OpenAI-compatible) to write a
+short Hinglish narrative summary of the same numbers — the model narrates
+the data, it never picks stocks or invents figures itself.
+
+- **Get a key**: sign in free at [build.nvidia.com](https://build.nvidia.com),
+  open any chat model's card, click "Get API Key" (starts with `nvapi-`).
+- **Store it safely**: on Streamlit Cloud, go to your app → **Settings →
+  Secrets** and add:
+  ```toml
+  NVIDIA_API_KEY = "nvapi-...."
+  ```
+  The app picks this up automatically — nothing else to do. Pasting a key
+  directly into the tab's text box instead works too, but only for that
+  one browser session (never written to disk or committed).
+- **Auto-refresh**: the "🔄 Auto-refresh" toggle uses Streamlit's
+  `st.fragment(run_every=...)` to re-scan on a timer *while the tab stays
+  open in a browser*. This is **not** a true always-on server-side job —
+  Streamlit Community Cloud's free tier has no background worker/cron, so
+  nothing scans while no one has the app open. For a real 24/7 agent,
+  you'd run this scan on a schedule outside Streamlit (e.g. a separate
+  cron/GitHub Action calling the same `screener` functions) and have the
+  app just read the latest saved result.
+- **Cost/rate limits**: every auto-refresh cycle re-fetches price data
+  for the whole universe and, for the fundamentals-scanned subset, hits
+  NVIDIA's API too if you click "Generate AI Agent Report" — keep the
+  interval and "Cash-flow check limit" reasonable to avoid rate limits
+  and API usage costs.
+
+## 9. Data-integrity notes (Section 6 of the methodology)
 
 - Prices come from Yahoo Finance (`yfinance`), adjusted for
   splits/dividends.
@@ -208,7 +255,7 @@ slower scan and a higher chance of hitting Yahoo's rate limits).
   official feed, another vendor's API, etc.) into that function to get
   real CONFIRMED / PARTIAL / SUSPECT statuses.
 
-## 9. Assumptions worth knowing about
+## 10. Assumptions worth knowing about
 
 The methodology document specifies the RS composite's 4 look-back
 weights (0.15 / 0.25 / 0.30 / 0.30) but not the exact look-back windows.
@@ -217,7 +264,7 @@ common convention for Indian-equity screeners. Change
 `RS_LOOKBACK_DAYS` in `screener/config.py` if you intend different
 windows — everything downstream picks it up automatically.
 
-## 10. Running the backend regression test
+## 11. Running the backend regression test
 
 `tests/test_app_backend.py` uses Streamlit's official headless
 `AppTest` framework to actually run `app.py` and simulate real widget
@@ -236,7 +283,7 @@ Run this after making any change to `app.py` — it's what caught the
 duplicate-chart-element and clashing-button-key bugs during development,
 and it will catch similar regressions before they reach your browser.
 
-## 11. Limitations (from the methodology, Section 8)
+## 12. Limitations (from the methodology, Section 8)
 
 - It's a screener, not a predictor — it describes what looks strong
   *now*, momentum can reverse sharply.

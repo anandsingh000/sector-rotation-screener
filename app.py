@@ -16,7 +16,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from screener import config, data, fundamentals, narrative, pipeline, scanner, ta
+from screener import ai_agent, config, data, fundamentals, narrative, pipeline, scanner, ta
 
 st.set_page_config(page_title="Sector Rotation Screener", layout="wide", page_icon="\U0001F4CA")
 
@@ -248,7 +248,7 @@ def _get_selection_rows(event) -> list[int]:
         return []
 
 
-tab_stocks, tab_sectors, tab_rrg, tab_chart, tab_ta_fa, tab_scanner, tab_about = st.tabs(
+tab_stocks, tab_sectors, tab_rrg, tab_chart, tab_ta_fa, tab_scanner, tab_agent, tab_about = st.tabs(
     [
         "\U0001F4C8 Stock Rankings",
         "\U0001F3E2 Sector Breadth",
@@ -256,6 +256,7 @@ tab_stocks, tab_sectors, tab_rrg, tab_chart, tab_ta_fa, tab_scanner, tab_about =
         "\U0001F4C9 Chart & Drawing",
         "\U0001F52C Technical + Fundamental",
         "\U0001F310 Market Scanner",
+        "\U0001F916 AI Market Agent",
         "\u2139\uFE0F Methodology",
     ]
 )
@@ -460,9 +461,12 @@ with tab_scanner:
     )
     exchange_pick = sc2.selectbox("Exchange", ["Both", "NSE only", "BSE only"], key="scanner_exchange_pick")
     fundamentals_limit = sc3.number_input(
-        "Fundamentals scan limit", min_value=0, max_value=500, value=40, step=10, key="scanner_fund_limit",
+        "Fundamentals scan limit", min_value=0, max_value=5000, value=40, step=10, key="scanner_fund_limit",
         help="Higher = more stocks get Cash Flow/ROE/ROCE/Valuation, but takes longer and risks Yahoo "
-             "Finance rate-limits. Price/volume/RSI/EMA columns always cover the FULL universe regardless.",
+             "Finance rate-limits (roughly 1-2 sec per stock, so 500 stocks \u2248 10-15 min). Price/volume/"
+             "RSI/EMA columns always cover the FULL loaded universe regardless of this number. To analyze the "
+             "REAL full NSE+BSE market (thousands of stocks), also swap in the full official universe CSV "
+             "(see README Section 7) -- the shipped file is a small demo sample.",
     )
 
     run_scan = st.button("\U0001F680 Run Market Scan", type="primary", key="run_scanner_btn")
@@ -584,6 +588,144 @@ with tab_scanner:
             "based) — DCF ya intrinsic-value model nahi hai. Investment advice nahi hai; khud research karein "
             "ya SEBI-registered adviser se baat karein."
         )
+
+with tab_agent:
+    st.subheader("\U0001F916 AI Market Agent (NVIDIA)")
+    st.caption(
+        "Yeh poori loaded market universe ko scan karta hai aur dikhata hai kin stocks mein **high volume "
+        "activity** ya **rising cash flow** hai — yeh table hamesha deterministic hisaab (code) se banti hai, "
+        "koi AI guess nahi karta. Uske upar, agar aap NVIDIA API key dete ho, ek LLM (NVIDIA NIM) is data ka "
+        "Hinglish mein summary/narration likh deta hai — AI sirf numbers explain karta hai, khud koi stock "
+        "choose ya invent nahi karta."
+    )
+
+    # ---- API key: prefer Streamlit secrets, fall back to a session-only manual entry ----
+    secret_key = ""
+    try:
+        secret_key = st.secrets.get("NVIDIA_API_KEY", "")
+    except Exception:
+        secret_key = ""
+
+    with st.expander("\U0001F511 NVIDIA API key", expanded=not bool(secret_key)):
+        if secret_key:
+            st.success("NVIDIA_API_KEY Streamlit secrets se mil gayi hai — kuch aur karne ki zaroorat nahi.")
+        else:
+            st.caption(
+                "Sabse mehfooz tareeka: Streamlit Cloud → app ke 'Settings' → 'Secrets' mein likho:\n\n"
+                "NVIDIA_API_KEY = \"nvapi-...\"\n\n"
+                "Neeche jo bhi paste karoge woh sirf ISI browser session ke liye hai — na file mein save hota "
+                "hai, na GitHub par jaata hai."
+            )
+        manual_key = st.text_input(
+            "NVIDIA API Key (session-only)", type="password", key="nvidia_api_key_input",
+        )
+        model_name = st.text_input(
+            "Model", value=ai_agent.DEFAULT_MODEL, key="nvidia_model_input",
+            help="build.nvidia.com ke catalog se koi bhi chat-completion model ID daal sakte ho.",
+        )
+
+    api_key = secret_key or st.session_state.get("nvidia_api_key_input", "")
+
+    ac1, ac2, ac3 = st.columns([2, 1, 1])
+    agent_universe_path = ac1.text_input(
+        "Universe CSV path", value="data/full_market_list.csv", key="agent_universe_path",
+    )
+    agent_exchange = ac2.selectbox("Exchange", ["Both", "NSE only", "BSE only"], key="agent_exchange_pick")
+    agent_fund_limit = ac3.number_input(
+        "Cash-flow check limit", min_value=0, max_value=5000, value=60, step=10, key="agent_fund_limit",
+        help="Kitne stocks ke liye cash-flow trend check kiya jaye (volume scan hamesha poori universe "
+             "cover karta hai).",
+    )
+
+    auto_col1, auto_col2 = st.columns([1, 1])
+    auto_refresh_on = auto_col1.checkbox(
+        "\U0001F504 Auto-refresh jab tak yeh tab khula hai", key="agent_autorefresh_on",
+        help="Sirf tab tak chalta hai jab tak browser mein yeh app khuli hai aur session active hai — "
+             "Streamlit Cloud ka free tier true 24/7 background job support nahi karta.",
+    )
+    refresh_minutes = auto_col2.select_slider(
+        "Interval (minutes)", options=[5, 10, 15, 30, 60], value=15,
+        key="agent_refresh_minutes", disabled=not auto_refresh_on,
+    )
+
+    manual_scan_clicked = st.button("\U0001F50D Scan market now", key="agent_manual_scan_btn")
+
+    def _run_agent_scan():
+        try:
+            uni = _load_market_universe_cached(agent_universe_path)
+        except Exception as e:
+            st.error(f"Universe file load nahi ho saki: {e}")
+            return
+        if agent_exchange == "NSE only":
+            uni = uni[uni["exchange"] == "NSE"]
+        elif agent_exchange == "BSE only":
+            uni = uni[uni["exchange"] == "BSE"]
+        yahoo_symbols = tuple(uni["yahoo_symbol"].tolist())
+        ohlcv_map = data.fetch_ohlcv_bulk(list(yahoo_symbols), period="6mo")
+        result = scanner.run_market_scan(uni, ohlcv_map, fundamentals_limit=agent_fund_limit)
+        st.session_state.agent_scan_result = result
+        st.session_state.agent_last_scan = dt.datetime.now()
+
+    def _render_agent_results():
+        result = st.session_state.get("agent_scan_result")
+        if result is None:
+            st.info("Upar 'Scan market now' dabao (ya auto-refresh on karo) scan shuru karne ke liye.")
+            return
+
+        st.caption(f"Last agent scan: {st.session_state.get('agent_last_scan')} — {len(result)} stocks checked.")
+        candidates = ai_agent.build_agent_candidates(result)
+
+        if candidates.empty:
+            st.info("Abhi koi stock volume-surge ya rising-cash-flow criteria pe fit nahi baith raha.")
+        else:
+            show_cols = {
+                "symbol": "Symbol", "name": "Name", "sector": "Sector", "exchange": "Exchange",
+                "_signal": "Signal", "volume_ratio": "Volume vs 20d Avg (x)",
+                "cash_flow_trend": "Cash Flow Trend", "rsi": "RSI", "ema_state": "EMA State",
+                "valuation": "Valuation",
+            }
+            cols = [c for c in show_cols if c in candidates.columns]
+            st.dataframe(
+                candidates[cols].rename(columns=show_cols).style.format(
+                    {"Volume vs 20d Avg (x)": "{:.2f}x", "RSI": "{:.1f}"}, na_rep="—"
+                ),
+                use_container_width=True, height=380,
+            )
+            st.download_button(
+                "Download shortlist (CSV)", candidates.to_csv(index=False),
+                "ai_agent_shortlist.csv", "text/csv", key="agent_download_btn",
+            )
+
+            st.markdown("---")
+            if st.button("\U0001F916 Generate AI Agent Report", key="agent_generate_report_btn"):
+                if not api_key:
+                    st.error("Pehle NVIDIA API key dijiye (upar '🔑 NVIDIA API key' expander mein).")
+                else:
+                    with st.spinner("NVIDIA NIM se report generate ho raha hai..."):
+                        outcome = ai_agent.generate_market_agent_report(candidates, api_key, model=model_name)
+                    if outcome["ok"]:
+                        st.markdown(outcome["text"])
+                    else:
+                        st.error(outcome["error"])
+
+        st.caption(
+            "\u26A0\uFE0F Yeh sirf data ka pattern dikhata hai (volume/cash-flow activity) — investment advice "
+            "nahi hai. AI ka summary bhi sirf isi table ko explain karta hai, khud koi naya data nahi banata."
+        )
+
+    if auto_refresh_on and hasattr(st, "fragment"):
+        @st.fragment(run_every=f"{refresh_minutes}m")
+        def _agent_autorefresh_fragment():
+            _run_agent_scan()
+            _render_agent_results()
+
+        if manual_scan_clicked:
+            _run_agent_scan()
+        _agent_autorefresh_fragment()
+    else:
+        if manual_scan_clicked:
+            _run_agent_scan()
+        _render_agent_results()
 
 with tab_about:
     st.markdown(
